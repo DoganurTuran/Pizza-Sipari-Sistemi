@@ -1,0 +1,57 @@
+import csv
+import datetime
+
+def add_to_database(name, tc, card_number, card_password, pizza, sauce, price):
+    date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open('Orders_Database.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([name, tc, card_number, card_password, pizza, sauce, price, date_time])
+def main():
+    print("Lütfen bir pizza ve sos seçiniz:")
+    print("Pizzalar:")
+    print("1: Klasik\n2: Margarita\n3: TürkPizza\n4: Sade Pizza")
+    pizza_choice = int(input("Pizza seçiminiz (1-4): "))
+    
+    if pizza_choice == 1:
+        pizza = KlasikPizza()
+    elif pizza_choice == 2:
+        pizza = MargheritaPizza()
+    elif pizza_choice == 3:
+        pizza = TurkPizza()
+    elif pizza_choice == 4:
+        pizza = DominosPizza()
+    else:
+        print("Geçersiz seçim. Program sonlandırılıyor.")
+        return
+    
+    print("\nSoslar:")
+    print("11: Zeytin\n12: Mantarlar\n13: Keçi Peyniri\n14: Et\n15: Soğan\n16: Mısır")
+    sauce_choice = int(input("Sos seçiminiz (11-16): "))
+    
+    if sauce_choice == 11:
+        pizza_with_sauce = Zeytin(pizza)
+    elif sauce_choice == 12:
+        pizza_with_sauce = Mantar(pizza)
+    elif sauce_choice == 13:
+        pizza_with_sauce = KeciPeyniri(pizza)
+    elif sauce_choice == 14:
+        pizza_with_sauce = Et(pizza)
+    elif sauce_choice == 15:
+        pizza_with_sauce = Sogan(pizza)
+    elif sauce_choice == 16:
+        pizza_with_sauce = Misir(pizza)
+    else:
+        print("Geçersiz seçim. Program sonlandırılıyor.")
+        return
+    
+    print("\nSipariş özeti:")
+    print(pizza_with_sauce.get_description())
+    price = pizza_with_sauce.get_cost()
+    print("Toplam fiyat: {} TL".format(price))
+    
+    name = input("\nİsim: ")
+    tc = input("TC Kimlik Numarası: ")
+    card_number = input("Kredi Kartı Numarası: ")
+    card_password = input("Kredi Kartı Şifresi: ")
+    
+    add_to_database(name, tc, card_number, card_password, pizza_with_sauce.get_description(), pizza_with_sauce.get_sauce(), price)
